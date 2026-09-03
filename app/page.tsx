@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { portalAccessHref, siteConfig } from '@/lib/site-config';
+import Link from 'next/link';
 
 const highlights = [
   { label: 'Live performance', copy: 'See the numbers that matter without digging through reports.' },
@@ -21,12 +21,12 @@ export default function Home() {
               Client portal
             </span>
           </a>
-          <a
-            href={`mailto:${siteConfig.contactEmail}`}
+          <Link
+            href="/client/login"
             className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/10"
           >
-            Get access <span aria-hidden="true">↗</span>
-          </a>
+            Enter workspace <span aria-hidden="true">↗</span>
+          </Link>
         </div>
       </header>
 
@@ -44,12 +44,12 @@ export default function Home() {
             The new DCampaign Portal will bring performance, approvals, files, and next steps into one focused workspace for your team.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-5">
-            <a
-              href={portalAccessHref}
+            <Link
+              href="/client/login"
               className="inline-flex h-13 items-center justify-center gap-2 rounded-full bg-brand px-7 text-xs font-extrabold uppercase tracking-[0.16em] text-white shadow-[0_14px_40px_rgba(241,97,51,0.24)] transition-colors hover:bg-brand-dark"
             >
-              Request portal access <span aria-hidden="true">↗</span>
-            </a>
+              Open client portal <span aria-hidden="true">↗</span>
+            </Link>
             <span className="flex items-center gap-2 text-sm text-white/45">
               <span className="size-2 rounded-full bg-brand shadow-[0_0_12px_#f16133]" aria-hidden="true" />
               Full experience coming soon
