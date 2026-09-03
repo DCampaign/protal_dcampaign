@@ -137,3 +137,22 @@ body {
   * { @apply border-border outline-ring/50; }
   body { @apply bg-background text-foreground; }
 }
+
+/* Keep the homepage comfortable at tablet widths instead of forcing desktop columns. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  section > div[class*="md:grid-cols-"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  section > div[class*="md:px-12"] {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 640px) {
+  /* Give the unified login card enough scale to anchor the hero on larger screens. */
+  #login > div > div:last-child {
+    padding: 2.5rem;
+  }
+}
