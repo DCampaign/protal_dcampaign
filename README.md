@@ -32,6 +32,7 @@ Run migrations in order from `supabase/migrations/`:
 2. `202609030002_project_management.sql`
 3. `202609030003_reporting.sql`
 4. `202609030004_client_operations.sql`
+5. `202609030005_security_notifications.sql`
 
 For a non-production project, optionally run `supabase/seed.sql` for clearly labelled Acme Fashion demo data. Create the first user in Supabase Auth, then change its profile role to `super_admin` in the dashboard or SQL editor. Never commit service-role credentials.
 
@@ -41,13 +42,22 @@ The `client-files` Storage bucket is private. Files must be served through authe
 
 Public: `/`, `/client/login`.
 
-Client workspace: `/client/dashboard`, `/client/projects`, `/client/projects/[projectId]`, `/client/seo`, `/client/meta-ads`, `/client/google-ads`, `/client/social-media`, `/client/content`, `/client/approvals`, `/client/reports`, `/client/files`, `/client/invoices`, `/client/support`, `/client/activity`.
+Client workspace: `/client/dashboard`, `/client/projects`, `/client/projects/[projectId]`, `/client/seo`, `/client/meta-ads`, `/client/google-ads`, `/client/social-media`, `/client/website-development`, `/client/content`, `/client/approvals`, `/client/reports`, `/client/files`, `/client/invoices`, `/client/support`, `/client/activity`, `/client/notifications`, `/client/settings`.
+
+Administration: `/admin/dashboard`, `/admin/clients`, `/admin/clients/new`, `/admin/clients/[clientId]`, plus operational queues for projects, tasks, services, reports, files, approvals, invoices, support, and team access.
+
+## Creating the first administrator and client
+
+Create the first user in Supabase Auth, then update the generated `profiles` row to `super_admin` from the Supabase SQL editor. Sign in and open `/admin/dashboard`. Create the organization, assign its purchased services, then send an invitation from the client detail page. The invited user is linked through `client_members`; never share an admin login with a client.
+
+Authorization is enforced twice: authenticated route protection in `proxy.ts`, and database Row Level Security on every client-owned table. Service links are generated from `client_services`, while service pages also check access server-side. Client files use the private `client-files` bucket with paths shaped as `clients/{client_uuid}/filename.ext` and are downloaded through short-lived signed URLs.
 
 ## Quality gates
 
 ```bash
 npm run lint
 npm run typecheck
+npm test
 npm run build
 ```
 
