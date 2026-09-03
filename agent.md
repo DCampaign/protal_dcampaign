@@ -21,6 +21,17 @@ Run `npm run lint && npm run typecheck && npm run build` before considering a ch
 - This repository is the client portal, not a duplicate of the main marketing website. Reuse its visual system and engineering standards while keeping portal flows focused and task-oriented.
 - Keep the first viewport useful. Portal actions, campaign status, approvals, and performance belong ahead of promotional content.
 
+### Portal visual contract
+
+Every new portal route, component, and feature must feel like the same DCampaign product. Do not introduce a second visual language or generic dashboard theme.
+
+- Use the shared fixed header pattern: `max-w-7xl`, `px-6 md:px-12`, logo sizing `h-8.5 w-[7.65rem] md:w-[9.35rem]`, compact `py-3 md:py-1.25` spacing, subtle bottom border, and orange `#f16133` outlined actions.
+- Use Manrope for body/interface text and Outfit for display headings. Match the existing DCampaign hierarchy: compact uppercase orange kickers, bold display headlines, tight tracking, and readable relaxed paragraph leading.
+- Keep the palette anchored to `#0b0b0c` / `#080808` charcoal, white and zinc neutrals, and `#f16133` orange. Use the existing glass cards, hero grid, glows, rounded cards, and thin low-contrast borders rather than inventing new treatments.
+- Preserve the established section rhythm: `max-w-7xl px-6 md:px-12`, generous `py-20 md:py-28` sections, alternating charcoal and soft-light surfaces, rounded `xl`/`2xl` cards, and orange one-pixel/short rule accents.
+- Match the existing interaction language: restrained hover lift, orange border/fill transitions, shimmer and glow motion only where useful, and reduced-motion fallbacks for every animation.
+- Portal content should adapt the DCampaign structure for client work—status, services, reports, approvals, documents, activity, and support—without changing the underlying look, spacing, margins, or responsive behavior.
+
 ## Hard rules
 
 ### 1. Centralize brand and contact data
