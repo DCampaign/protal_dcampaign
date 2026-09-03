@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { PortalHeader } from '../components/portal-header';
 
 const highlights = [
   { label: 'Live performance', copy: 'See the numbers that matter without digging through reports.' },
@@ -13,24 +13,9 @@ export default function Home() {
       <div className="hero-grid pointer-events-none absolute inset-0 opacity-40" />
       <div className="hero-glow pointer-events-none absolute -right-40 -top-40 size-160 rounded-full" />
 
-      <header className="relative z-20 border-b border-white/8">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
-          <a href="#top" aria-label="DCampaign Portal home" className="flex items-center gap-4">
-            <Image src="/dcampaign-logo-white.webp" alt="DCampaign" width={167} height={32} priority className="h-8 w-auto" />
-            <span className="hidden border-l border-white/15 pl-4 text-xs font-semibold uppercase tracking-[0.22em] text-white/55 sm:block">
-              Client portal
-            </span>
-          </a>
-          <Link
-            href="/client/login"
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/10"
-          >
-            Enter workspace <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
-      </header>
+      <PortalHeader />
 
-      <section id="top" className="relative z-10 mx-auto grid min-h-[calc(100vh-80px)] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:px-10 lg:py-24">
+      <section id="top" className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-14 px-6 pb-20 pt-32 lg:grid-cols-[1.15fr_0.85fr] lg:px-12 lg:pb-24 lg:pt-36">
         <div className="max-w-3xl">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/10 px-4 py-2 text-[0.65rem] font-extrabold uppercase tracking-[0.2em] text-brand-light">
             <span className="size-1.5 rounded-full bg-brand shadow-[0_0_14px_#f16133]" />
