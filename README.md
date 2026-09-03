@@ -1,15 +1,58 @@
-# DCampaign Portal
+# DCampaign Digital Client Portal
 
-The client-facing workspace for DCampaign Digital. The first MVP slice is built in the same TypeScript, Next.js, Tailwind, Manrope, Outfit, charcoal, and orange design system as the DCampaign website.
+The private client workspace for DCampaign Digital at `portal.dcampaign.com`. It uses the same DCampaign design system—Manrope body type, Outfit display type, charcoal surfaces, orange `#f16133` accents, compact labels, rounded cards, subtle borders, and restrained motion—while adapting the structure for client work.
+
+## Stack
+
+Next.js App Router, TypeScript, Tailwind CSS, Supabase PostgreSQL/Auth/Storage, and server-side Supabase access through `@supabase/ssr`.
+
+## Local setup
+
+```bash
+npm install
+copy .env.example .env.local
+npm run dev
+```
+
+Set these values in `.env.local`:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_MAIN_SITE_URL=https://dcampaign.com
+```
+
+## Supabase setup
+
+Run migrations in order from `supabase/migrations/`:
+
+1. `202609030001_foundation.sql`
+2. `202609030002_project_management.sql`
+3. `202609030003_reporting.sql`
+4. `202609030004_client_operations.sql`
+
+For a non-production project, optionally run `supabase/seed.sql` for clearly labelled Acme Fashion demo data. Create the first user in Supabase Auth, then change its profile role to `super_admin` in the dashboard or SQL editor. Never commit service-role credentials.
+
+The `client-files` Storage bucket is private. Files must be served through authenticated access or short-lived signed URLs; never publish permanent client file URLs.
 
 ## Routes
 
-- `/` — branded portal entry page
-- `/client/login` — client sign-in experience (demo form currently routes to the dashboard)
-- `/client/dashboard` — Phase 1 dashboard preview with service progress, SEO delivery, Meta Ads, Social Media, activity, and documents
+Public: `/`, `/client/login`.
 
-## Subdomain handoff
+Client workspace: `/client/dashboard`, `/client/projects`, `/client/projects/[projectId]`, `/client/seo`, `/client/meta-ads`, `/client/google-ads`, `/client/social-media`, `/client/content`, `/client/approvals`, `/client/reports`, `/client/files`, `/client/invoices`, `/client/support`, `/client/activity`.
 
-The intended public host is `portal.dcampaign.com`. Point that subdomain at the eventual deployment target, then set the app’s public URL in the hosting provider’s environment settings. The route structure is already scoped under `/client/*`, so a future auth layer can protect those routes without changing the marketing site.
+## Quality gates
 
-The current login and dashboard use representative demo data. Production authentication, row-level client access, Supabase/Postgres persistence, file storage, and API-backed analytics should be added in the next implementation phase.
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Before production, verify authenticated route protection, Supabase RLS cross-client isolation, signed file URLs, approval response authorization, support-ticket validation, mobile navigation, keyboard focus, empty/loading/error states, and no private content in metadata. The portal uses `noindex` metadata and security headers by default.
+
+## Deployment
+
+Deploy the `main` branch to the separate Hostinger application for `portal.dcampaign.com`. Keep the main `dcampaign.com` application and repository separate. Configure the production Supabase URL, publishable key, service key, and redirect URLs for `https://portal.dcampaign.com`.
