@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'DCampaign Portal',
   description:
     'A focused workspace for DCampaign clients to follow campaigns, approvals, and performance.',
+  robots: { index: false, follow: false },
   icons: {
     icon: '/favicon.png',
     shortcut: '/favicon.png',
