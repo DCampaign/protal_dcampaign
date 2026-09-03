@@ -21,9 +21,9 @@ export function PortalHeader({ active = 'Overview' }: { active?: string }) {
         </div>
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Portal navigation">
           {links.map(([label, href]) => <Link key={label} href={href} className={`py-5 text-sm font-semibold transition-colors ${active === label ? 'text-white' : 'text-white/55 hover:text-white'}`}>{label}</Link>)}
-          <Link href="/client/login" className="rounded border border-[#f16133] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#f16133] transition-colors hover:bg-[#f16133] hover:text-white">Sign in</Link>
+          <Link href="/#login" className="rounded border border-[#f16133] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#f16133] transition-colors hover:bg-[#f16133] hover:text-white">Sign in</Link>
         </nav>
-        <Link href="/client/login" className="rounded border border-[#f16133] px-4 py-2 text-[0.65rem] font-bold uppercase tracking-wider text-[#f16133] lg:hidden">Sign in</Link>
+        <Link href="/#login" className="rounded border border-[#f16133] px-4 py-2 text-[0.65rem] font-bold uppercase tracking-wider text-[#f16133] lg:hidden">Sign in</Link>
       </div>
     </header>
   );

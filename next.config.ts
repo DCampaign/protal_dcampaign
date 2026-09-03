@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // The in-app browser opens the local site via 127.0.0.1 while Next runs on localhost.
+  // Allow that development origin so HMR and client chunks load correctly.
+  allowedDevOrigins: ['127.0.0.1'],
   async headers() {
     const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : '';
     const contentSecurityPolicy = [
