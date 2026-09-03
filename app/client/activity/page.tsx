@@ -1,0 +1,8 @@
+import Link from 'next/link';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+
+export default async function ClientActivityPage() {
+  const supabase = await createSupabaseServerClient();
+  const activities = supabase ? (await supabase.from('activities').select('id,title,description,activity_type,created_at').eq('visible_to_client', true).order('created_at', { ascending: false }).limit(10)).data ?? [] : [];
+  return <main className="min-h-screen bg-brand-bg px-6 pb-20 pt-28 text-white md:px-12"><div className="mx-auto max-w-4xl"><Link href="/client/dashboard" className="text-xs font-bold uppercase tracking-widest text-brand-light hover:text-white">← Dashboard</Link><p className="mt-10 text-xs font-extrabold uppercase tracking-widest text-brand">Activity timeline</p><h1 className="mt-3 font-display text-4xl font-extrabold md:text-5xl">What moved recently.</h1><div className="mt-10 space-y-4">{activities.length === 0 ? <div className="glass-card rounded-2xl p-7 text-sm leading-7 text-white/45">Your recent campaign activity will appear here as your team completes work, uploads reports, and updates projects.</div> : activities.map((activity) => <article key={activity.id} className="glass-card flex gap-4 rounded-2xl p-6"><span className="mt-1 grid size-8 shrink-0 place-items-center rounded-full bg-brand/15 text-brand">✓</span><div><h2 className="font-display text-lg font-bold">{activity.title}</h2>{activity.description && <p className="mt-1 text-sm leading-6 text-white/50">{activity.description}</p>}<p className="mt-3 text-[0.65rem] font-bold uppercase tracking-widest text-white/30">{activity.activity_type} · {new Date(activity.created_at).toLocaleDateString('en-IN')}</p></div></article>)}</div></div></main>;
+}
