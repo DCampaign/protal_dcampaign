@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
 @import 'tailwindcss';
-@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -88,6 +87,41 @@ body {
   animation: glow-drift 9s ease-in-out infinite alternate;
 }
 
+.hero-ambient-gradient {
+  background: linear-gradient(135deg, #040404 0%, #090807 52%, #150c09 100%);
+}
+
+.creative-underline { position: relative; white-space: nowrap; }
+.creative-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.12em;
+  height: 0.12em;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f16133, #ff9a76);
+  transform: scaleX(0.72) rotate(-1deg);
+  transform-origin: left;
+}
+
+.shimmer-btn { position: relative; overflow: hidden; }
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  inset: -50% auto -50% -35%;
+  width: 24%;
+  transform: rotate(18deg);
+  background: rgb(255 255 255 / 0.3);
+  filter: blur(5px);
+  animation: button-shimmer 3.8s ease-in-out infinite;
+}
+
+@keyframes button-shimmer {
+  0%, 55% { left: -35%; }
+  90%, 100% { left: 125%; }
+}
+
 @keyframes glow-drift {
   from { transform: translate3d(0, 0, 0) scale(0.92); opacity: 0.7; }
   to { transform: translate3d(-6%, 8%, 0) scale(1.08); opacity: 1; }
@@ -96,6 +130,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .hero-glow { animation: none; }
+  .shimmer-btn::after { animation: none; }
 }
 
 @layer base {

@@ -1,76 +1,41 @@
+'use client';
 import Link from 'next/link';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { PortalHeader } from '../components/portal-header';
 
-const highlights = [
-  { label: 'Live performance', copy: 'See the numbers that matter without digging through reports.' },
-  { label: 'Faster approvals', copy: 'Review campaign work and keep every decision in one place.' },
-  { label: 'Secure workspace', copy: 'A private home for your strategy, assets, and next actions.' },
-];
+const features = [
+  ['01','Live Campaign Performance','Track SEO, Meta Ads, social media, and website delivery from one clear workspace.'],
+  ['02','Approvals Without Delays','Review creatives, content, and campaign changes with every decision kept in context.'],
+  ['03','Reports & Documents','Find monthly reports, invoices, calendars, and shared assets whenever you need them.'],
+  ['04','One Connected Team','See recent activity, next actions, and contact your DCampaign team from the same place.'],
+] as const;
+const steps = [['01','Sign in securely','Enter your private DCampaign workspace.'],['02','See what moved','Review progress, performance, deliverables, and open decisions.'],['03','Keep work moving','Approve, download, comment, or reach your account team.']] as const;
+const faqs = [
+  ['What will I see inside my portal?','Active services, progress, campaign metrics, recent activity, reports, files, approvals, invoices, and support.'],
+  ['Is my company information private?','Yes. Every client receives a secure private workspace with permission-based access.'],
+  ['Can more than one team member get access?','Yes. Additional users can be invited with access appropriate to their role.'],
+  ['Can I approve campaign work here?','Yes. Creative, feedback, decisions, and approval status stay together.'],
+] as const;
 
-export default function Home() {
-  return (
-    <main className="relative min-h-screen overflow-hidden bg-brand-bg text-white">
-      <div className="hero-grid pointer-events-none absolute inset-0 opacity-40" />
-      <div className="hero-glow pointer-events-none absolute -right-40 -top-40 size-160 rounded-full" />
-
-      <PortalHeader />
-
-      <section id="top" className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-14 px-6 pb-20 pt-32 lg:grid-cols-[1.15fr_0.85fr] lg:px-12 lg:pb-24 lg:pt-36">
-        <div className="max-w-3xl">
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/10 px-4 py-2 text-[0.65rem] font-extrabold uppercase tracking-[0.2em] text-brand-light">
-            <span className="size-1.5 rounded-full bg-brand shadow-[0_0_14px_#f16133]" />
-            One clear view of your growth
-          </div>
-          <h1 className="font-display text-5xl font-black leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-8xl">
-            Campaign work,
-            <span className="brand-gradient block">finally in sync.</span>
-          </h1>
-          <p className="mt-7 max-w-2xl text-base leading-8 text-white/62 sm:text-lg">
-            The new DCampaign Portal will bring performance, approvals, files, and next steps into one focused workspace for your team.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center gap-5">
-            <Link
-              href="/client/login"
-              className="inline-flex h-13 items-center justify-center gap-2 rounded-full bg-brand px-7 text-xs font-extrabold uppercase tracking-[0.16em] text-white shadow-[0_14px_40px_rgba(241,97,51,0.24)] transition-colors hover:bg-brand-dark"
-            >
-              Open client portal <span aria-hidden="true">↗</span>
-            </Link>
-            <span className="flex items-center gap-2 text-sm text-white/45">
-              <span className="size-2 rounded-full bg-brand shadow-[0_0_12px_#f16133]" aria-hidden="true" />
-              Full experience coming soon
-            </span>
-          </div>
-        </div>
-
-        <aside className="relative mx-auto w-full max-w-xl lg:max-w-none" aria-label="Portal preview">
-          <div className="absolute -inset-4 rounded-[2rem] bg-brand/10 blur-3xl" />
-          <div className="glass-card relative overflow-hidden rounded-[1.75rem] p-4 shadow-2xl shadow-black/35 sm:p-6">
-            <div className="mb-6 flex items-center justify-between border-b border-white/8 pb-5">
-              <div>
-                <p className="text-[0.65rem] font-extrabold uppercase tracking-[0.2em] text-brand">Workspace preview</p>
-                <h2 className="mt-2 font-display text-xl font-bold">Everything moves together.</h2>
-              </div>
-              <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-emerald-300">On track</span>
-            </div>
-            <div className="space-y-3">
-              {highlights.map(({ label, copy }, index) => (
-                <div key={label} className="group flex gap-4 rounded-2xl border border-white/8 bg-white/[0.035] p-5 transition-colors hover:border-brand/25 hover:bg-brand/[0.045]">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand/12 font-display text-xs font-black tracking-widest text-brand-light">
-                    0{index + 1}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center justify-between gap-4">
-                      <h3 className="font-display text-base font-bold">{label}</h3>
-                      <span className="size-1.5 rounded-full bg-brand/60" aria-hidden="true" />
-                    </div>
-                    <p className="mt-1 text-sm leading-6 text-white/48">{copy}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
-      </section>
-    </main>
-  );
+export default function Home(){
+ const [openFaq,setOpenFaq]=useState(0);
+ return <main className="min-h-screen bg-white text-zinc-950">
+  <PortalHeader />
+  <section id="overview" className="relative flex min-h-[70vh] items-center overflow-hidden bg-[#080808] pb-16 pt-28 text-white md:pb-20 md:pt-32">
+   <div className="hero-ambient-gradient pointer-events-none absolute inset-0"/><div className="pointer-events-none absolute -left-[12%] top-[5%] size-130 rounded-full bg-[#f16133]/16 blur-[135px]"/><div className="pointer-events-none absolute -bottom-[55%] right-[-5%] size-170 rounded-full bg-[#f16133]/13 blur-[150px]"/><div className="hero-grid pointer-events-none absolute inset-0 opacity-20"/>
+   <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-12"><div className="max-w-5xl"><p className="text-xs font-extrabold uppercase tracking-widest text-[#f16133] md:text-sm">DCAMPAIGN CLIENT GROWTH PORTAL</p><h1 className="mt-5 max-w-5xl font-display text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-5xl md:text-6xl lg:text-[4rem]">Every Campaign. Every Result. <span className="creative-underline text-[#f16133]">One Connected Workspace.</span></h1><p className="mt-6 max-w-3xl text-base leading-relaxed text-zinc-300 md:text-lg">Your private command centre for performance, project delivery, approvals, reports, files, and direct collaboration with the DCampaign team.</p><div className="mt-8 flex flex-wrap gap-4"><Link href="/client/login" className="shimmer-btn rounded bg-[#f16133] px-8 py-4 text-sm font-bold uppercase tracking-wider shadow-lg shadow-[#f16133]/20 transition hover:scale-[1.02] hover:bg-[#d55328]">Access client portal</Link><a href="#features" className="rounded border border-white/25 px-8 py-4 text-sm font-bold uppercase tracking-wider transition hover:border-[#f16133] hover:text-[#f16133]">Explore features</a></div><div className="mt-9 flex flex-wrap gap-8 border-t border-white/10 pt-7 text-sm text-zinc-400">{['Secure client access','Real-time visibility','Faster collaboration'].map(x=><span key={x} className="flex items-center gap-2"><b className="text-[#f16133]">✓</b>{x}</span>)}</div></div></div>
+  </section>
+  <section className="border-b border-zinc-200 bg-white py-8"><div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-6 px-6 text-center md:px-12">{[['450+','Projects delivered'],['20+','Certified experts'],['12+','Countries served'],['4','Services connected']].map(([v,l])=><div key={l} className="min-w-32 flex-1"><p className="font-display text-3xl font-extrabold">{v}</p><p className="mt-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">{l}</p></div>)}</div></section>
+  <section id="features" className="bg-[#f2f3f5] py-20 md:py-28"><div className="mx-auto max-w-7xl px-6 md:px-12"><Title kicker="ONE PORTAL. TOTAL VISIBILITY." title={<>Everything your growth team needs, <span className="text-[#f16133]">in one place.</span></>}/><div className="grid gap-6 md:grid-cols-2">{features.map(([n,t,c])=><article key={t} className="group rounded-2xl border border-zinc-200/80 bg-white p-7 shadow-sm transition duration-500 hover:-translate-y-1 hover:border-[#f16133]/35 hover:shadow-xl md:p-9"><div className="flex gap-5"><span className="font-display text-sm font-black tracking-widest text-[#f16133]">{n}</span><div><h3 className="font-display text-xl font-extrabold md:text-2xl">{t}</h3><p className="mt-3 text-sm leading-7 text-zinc-600">{c}</p><span className="mt-6 inline-block text-xs font-bold uppercase tracking-widest text-[#f16133]">Learn more →</span></div></div></article>)}</div></div></section>
+  <section className="overflow-hidden bg-[#0b0b0c] py-20 text-white md:py-28"><div className="mx-auto grid max-w-7xl gap-14 px-6 md:px-12 lg:grid-cols-[.85fr_1.15fr] lg:items-center"><div><p className="text-xs font-bold uppercase tracking-widest text-[#f16133]">YOUR WORKSPACE PREVIEW</p><h2 className="mt-4 font-display text-3xl font-extrabold leading-tight md:text-5xl">Know exactly where your growth stands.</h2><div className="my-6 h-1 w-12 rounded bg-[#f16133]"/><p className="text-sm leading-7 text-zinc-400 md:text-base">A clear view of delivery and performance replaces scattered messages, spreadsheets, and status calls.</p><Link href="/client/dashboard" className="mt-8 inline-flex rounded bg-[#f16133] px-7 py-3.5 text-xs font-bold uppercase tracking-widest hover:bg-[#d55328]">View demo dashboard</Link></div><DashboardPreview/></div></section>
+  <section className="bg-white py-20 md:py-28"><div className="mx-auto max-w-7xl px-6 md:px-12"><div className="text-center"><p className="text-xs font-bold uppercase tracking-widest text-[#f16133]">HOW IT WORKS</p><h2 className="mt-4 font-display text-3xl font-extrabold md:text-5xl">Simple by design. Powerful in practice.</h2><div className="mx-auto my-14 h-1 w-12 rounded bg-[#f16133]"/></div><div className="grid gap-10 md:grid-cols-3">{steps.map(([n,t,c])=><div key={t} className="text-center"><div className="mx-auto grid size-16 place-items-center rounded-full border border-[#f16133]/25 bg-[#f16133]/8 font-display text-lg font-black text-[#f16133]">{n}</div><h3 className="mt-6 font-display text-xl font-extrabold">{t}</h3><p className="mx-auto mt-3 max-w-sm text-sm leading-7 text-zinc-600">{c}</p></div>)}</div></div></section>
+  <section className="bg-[#f2f3f5] py-20 md:py-28"><div className="mx-auto max-w-4xl px-6 text-center md:px-12"><p className="text-xs font-bold uppercase tracking-widest text-[#f16133]">BUILT FOR PARTNERSHIP</p><h2 className="mt-4 font-display text-3xl font-extrabold md:text-5xl">Less chasing. More clarity. Better momentum.</h2><div className="relative mt-10 rounded-2xl border border-zinc-200 bg-white p-8 text-left shadow-xl md:p-12"><span className="absolute right-10 top-5 font-serif text-8xl text-[#f16133]/10">“</span><p className="relative text-lg leading-8 text-zinc-700 md:text-xl">The portal gives every client a transparent view of what has been delivered, what is performing, and what needs their attention next.</p><div className="mt-7 border-t border-zinc-100 pt-6"><p className="font-display text-sm font-extrabold">DCampaign Client Success Team</p><p className="mt-1 text-xs font-semibold text-[#f16133]">Growth, connected.</p></div></div></div></section>
+  <section id="faq" className="bg-white py-20 md:py-28"><div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-12 lg:grid-cols-2 lg:gap-16"><Title kicker="FREQUENTLY ASKED QUESTIONS" title={<>Everything you need to know before signing in.</>}/><div className="space-y-4">{faqs.map(([q,a],i)=>{const open=openFaq===i;return <div key={q} className="overflow-hidden rounded-xl border border-zinc-200 shadow-sm"><button type="button" onClick={()=>setOpenFaq(open?-1:i)} className="flex w-full cursor-pointer items-center justify-between gap-5 px-6 py-5 text-left font-display text-sm font-bold hover:text-[#f16133] md:text-base"><span>{q}</span><span className={`text-xl text-[#f16133] transition-transform ${open?'rotate-45':''}`}>+</span></button><div className={`grid transition-all duration-300 ${open?'grid-rows-[1fr] border-t border-zinc-100':'grid-rows-[0fr]'}`}><div className="overflow-hidden"><p className="bg-zinc-50/60 px-6 py-5 text-sm leading-7 text-zinc-600">{a}</p></div></div></div>})}</div></div></section>
+  <section className="relative overflow-hidden bg-[#0b0b0c] py-20 text-white"><div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(241,97,51,.18),transparent_40%)]"/><div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-8 px-6 md:px-12 lg:flex-row lg:items-center"><div><p className="text-xs font-bold uppercase tracking-widest text-[#f16133]">YOUR GROWTH WORKSPACE IS READY</p><h2 className="mt-4 font-display text-3xl font-extrabold md:text-5xl">Everything important. One login away.</h2></div><Link href="/client/login" className="shrink-0 rounded bg-[#f16133] px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[#d55328]">Sign in to your portal</Link></div></section>
+  <footer className="border-t border-zinc-900 bg-[#080808] py-8 text-zinc-500"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-6 text-xs md:flex-row md:px-12"><p>© 2026 DCampaign Digital. All rights reserved.</p><div className="flex gap-6"><a href="mailto:info@dcampaign.com" className="hover:text-[#f16133]">info@dcampaign.com</a><Link href="/client/login" className="hover:text-[#f16133]">Client login</Link></div></div></footer>
+ </main>
 }
+
+function Title({kicker,title}:{kicker:string;title:ReactNode}){return <div className="mb-14 max-w-3xl"><p className="text-xs font-bold uppercase tracking-widest text-[#f16133]">{kicker}</p><h2 className="mt-4 font-display text-3xl font-extrabold leading-tight md:text-5xl">{title}</h2><div className="mt-6 h-1 w-12 rounded bg-[#f16133]"/></div>}
+function DashboardPreview(){return <div className="rounded-2xl border border-white/10 bg-[#151518] p-5 shadow-2xl md:p-7"><div className="flex justify-between border-b border-white/10 pb-5"><div><p className="text-xs font-bold">ABC Company</p><p className="mt-1 text-[.65rem] uppercase tracking-wider text-zinc-500">September overview</p></div><span className="rounded-full bg-emerald-400/10 px-3 py-1.5 text-[.65rem] font-bold uppercase text-emerald-300">On track</span></div><div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">{[['SEO','72%'],['Meta Ads','84%'],['Social','60%'],['Website','92%']].map(([l,v])=><div key={l} className="rounded-xl border border-white/8 bg-white/[.035] p-4"><p className="text-[.6rem] font-bold uppercase tracking-wider text-zinc-500">{l}</p><p className="mt-3 font-display text-xl font-extrabold">{v}</p><div className="mt-3 h-1 rounded bg-white/10"><div className="h-full rounded bg-[#f16133]" style={{width:v}}/></div></div>)}</div><div className="mt-4 rounded-xl border border-white/8 bg-white/[.025] p-5"><p className="text-[.65rem] font-bold uppercase tracking-widest text-[#f16133]">Recent activity</p>{['Meta campaign optimised','SEO report published','Creative ready for approval'].map((x,i)=><div key={x} className="flex items-center gap-3 border-b border-white/8 py-3 text-xs text-zinc-300 last:border-0"><span className="grid size-6 place-items-center rounded-full bg-[#f16133]/15 text-[#f16133]">{i+1}</span>{x}</div>)}</div></div>}
