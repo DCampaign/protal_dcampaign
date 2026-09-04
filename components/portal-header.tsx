@@ -24,8 +24,9 @@ export function PortalHeader() {
           <span className="hidden h-6 w-0.25 bg-white/15 sm:block" />
           <span className="hidden text-xs font-semibold tracking-[0.18em] text-white/55 sm:block">PORTAL</span>
         </div>
-        <a href="mailto:contact@dcampaign.com" className="rounded border border-[#f16133] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#f16133]">Support</a>
+        <a href="/support" className="rounded border border-[#f16133] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#f16133]">Support</a>
       </div>
     </header>
   );
 }
+
