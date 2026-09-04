@@ -23,6 +23,14 @@ const nextConfig: NextConfig = {
     ];
     return [
       { source: '/(.*)', headers: securityHeaders },
+      // Keep all app HTML fresh after deployments; fingerprinted Next assets remain cacheable.
+      { source: '/((?!_next/static|_next/image|favicon.ico).*)', headers: [
+        { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0' },
+        { key: 'CDN-Cache-Control', value: 'no-store' },
+        { key: 'Surrogate-Control', value: 'no-store' },
+        { key: 'Pragma', value: 'no-cache' },
+        { key: 'Expires', value: '0' },
+      ] },
       { source: '/client/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store, max-age=0' }] },
       { source: '/admin/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store, max-age=0' }] },
     ];
