@@ -1,70 +1,34 @@
+'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { BarChart3, Bell, BriefcaseBusiness, CheckSquare, CircleHelp, FileText, FolderKanban, LayoutDashboard, LogOut, Receipt, Settings } from 'lucide-react';
 import { logoutAction } from '@/app/auth/actions';
-
 export type PortalService = { id: string; name: string; slug: string; icon?: string | null; status: string; progress: number };
-
-const serviceRoutes: Record<string, string> = {
-  seo: '/client/seo',
-  'meta-ads': '/client/meta-ads',
-  'google-ads': '/client/google-ads',
-  'social-media': '/client/social-media',
-  'website-development': '/client/website-development',
-};
-
-const baseNavigation = [
-  ['Dashboard', '/client/dashboard'],
-  ['Projects', '/client/projects'],
+const serviceRoutes: Record<string, string> = { seo: '/client/seo', 'meta-ads': '/client/meta-ads', 'google-ads': '/client/google-ads', 'social-media': '/client/social-media', 'website-development': '/client/website-development' };
+const groups = [
+  { label: 'MY WORK', items: [['Projects', '/client/projects', FolderKanban], ['Services', '/client/services', BriefcaseBusiness]] },
+  { label: 'COLLABORATION', items: [['Approvals', '/client/approvals', CheckSquare], ['Files', '/client/files', FileText]] },
+  { label: 'REPORTING', items: [['Reports', '/client/reports', BarChart3]] },
+  { label: 'BILLING', items: [['Invoices', '/client/invoices', Receipt]] },
+  { label: 'HELP', items: [['Support', '/client/support', CircleHelp]] },
 ] as const;
-
-const operationsNavigation = [
-  ['Content', '/client/content'],
-  ['Reports', '/client/reports'],
-  ['Files', '/client/files'],
-  ['Approvals', '/client/approvals'],
-  ['Invoices', '/client/invoices'],
-  ['Support', '/client/support'],
-  ['Activity', '/client/activity'],
-  ['Notifications', '/client/notifications'],
-  ['Settings', '/client/settings'],
-] as const;
-
-function Navigation({ services, pendingApprovals = 0 }: { services: PortalService[]; pendingApprovals?: number }) {
-  return (
-    <nav aria-label="Client workspace" className="space-y-1">
-      {baseNavigation.map(([label, href]) => <NavLink key={href} href={href} label={label} />)}
-      {services.map((service) => <NavLink key={service.id} href={serviceRoutes[service.slug] ?? `/client/services/${service.slug}`} label={service.name} />)}
-      <div className="my-4 border-t border-white/8" />
-      {operationsNavigation.map(([label, href]) => <NavLink key={href} href={href} label={label} badge={label === 'Approvals' ? pendingApprovals : 0} />)}
-    </nav>
-  );
+function Navigation({ services, pendingApprovals = 0, activeHref, onSelect }: { services: PortalService[]; pendingApprovals?: number; activeHref?: string; onSelect?: (href: string) => void }) {
+  return <nav aria-label="Client workspace" className="space-y-6"><div><NavLink href="/client/dashboard" label="Dashboard" Icon={LayoutDashboard} activeHref={activeHref} onSelect={onSelect} /></div>{groups.map((group) => <div key={group.label}><p className="mb-2 px-3 text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/30">{group.label}</p><div className="space-y-1">{group.items.map(([label, href, Icon]) => <NavLink key={href} href={href} label={label} Icon={Icon} badge={label === 'Approvals' ? pendingApprovals : 0} activeHref={activeHref} onSelect={onSelect} />)}{group.label === 'MY WORK' && services.map((service) => <NavLink key={service.id} href={serviceRoutes[service.slug] ?? `/client/services/${service.slug}`} label={service.name} Icon={BriefcaseBusiness} activeHref={activeHref} onSelect={onSelect} />)}</div></div>)}</nav>;
 }
-
-function NavLink({ href, label, badge = 0 }: { href: string; label: string; badge?: number }) {
-  return <Link href={href} className="flex min-h-11 items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-white/55 transition hover:bg-white/6 hover:text-white"><span>{label}</span>{badge > 0 && <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-extrabold text-white">{badge}</span>}</Link>;
+function NavLink({ href, label, Icon, badge = 0, activeHref, onSelect }: { href: string; label: string; Icon: typeof LayoutDashboard; badge?: number; activeHref?: string; onSelect?: (href: string) => void }) {
+  const active = activeHref === href;
+  return <Link href={href} onClick={(event) => { if (onSelect) { event.preventDefault(); onSelect(href); } }} className={`group flex min-h-10 items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${active ? 'bg-brand/15 text-white' : 'text-white/55 hover:bg-white/6 hover:text-white'}`}><span className="flex items-center gap-3"><Icon size={17} strokeWidth={1.8} className={active ? 'text-brand' : 'text-white/35 transition group-hover:text-brand'} />{label}</span>{badge > 0 && <span className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-extrabold text-white">{badge}</span>}</Link>;
 }
-
+function WorkspacePanel({ href }: { href: string }) {
+  const label = href.includes('reports') ? 'Reports' : href.includes('projects') ? 'Projects' : href.includes('approvals') ? 'Approvals' : href.includes('files') ? 'Files' : href.includes('invoices') ? 'Invoices' : href.includes('support') ? 'Support' : href.includes('seo') ? 'SEO' : href.includes('social-media') ? 'Social Media Marketing' : href.includes('website-development') ? 'Website Development' : 'Services';
+  const descriptions: Record<string, string> = { Reports: 'Review performance reports published by your DCampaign team.', Projects: 'Track milestones, delivery progress, and current project work.', Approvals: 'Review and respond to creative, content, and campaign approvals.', Files: 'Access reports, creatives, website files, and shared documents.', Invoices: 'View invoice status, amounts, and payment history.', Support: 'Raise a request and keep up with your support conversations.', Services: 'Services enabled for your organization appear here.' };
+  return <div className="space-y-8"><div><p className="text-xs font-extrabold uppercase tracking-[0.22em] text-brand">Client workspace</p><h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight">{label}</h1><p className="mt-3 max-w-xl text-sm leading-6 text-white/48">{descriptions[label] ?? 'Track your active service and the work currently in progress.'}</p></div><div className="grid gap-4 sm:grid-cols-3"><div className="rounded-2xl border border-white/8 bg-white/[0.035] p-5"><p className="text-xs font-extrabold uppercase tracking-wider text-white/40">Status</p><p className="mt-4 font-display text-2xl font-extrabold">On track</p></div><div className="rounded-2xl border border-white/8 bg-white/[0.035] p-5"><p className="text-xs font-extrabold uppercase tracking-wider text-white/40">Updates</p><p className="mt-4 font-display text-2xl font-extrabold">Up to date</p></div><div className="rounded-2xl border border-brand/20 bg-brand/[0.06] p-5"><p className="text-xs font-extrabold uppercase tracking-wider text-brand">Next step</p><p className="mt-4 font-display text-2xl font-extrabold">Review work</p></div></div><div className="rounded-3xl border border-white/8 bg-white/[0.025] p-6 sm:p-8"><p className="text-sm font-extrabold uppercase tracking-widest text-brand">Workspace panel</p><h2 className="mt-2 font-display text-2xl font-extrabold">Everything for {label.toLowerCase()} in one place.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-white/48">Use this focused view to scan the latest updates without leaving your dashboard. Open the full workspace when you need detailed records or actions.</p><Link href={href} className="mt-6 inline-flex min-h-11 items-center rounded-xl bg-brand px-5 text-sm font-extrabold text-white transition hover:bg-brand-dark">Open full {label.toLowerCase()} page →</Link></div></div>;
+}
 export function PortalShell({ children, companyName, packageName, profileName, services, pendingApprovals = 0, unreadNotifications = 0 }: { children: ReactNode; companyName: string; packageName?: string | null; profileName: string; services: PortalService[]; pendingApprovals?: number; unreadNotifications?: number }) {
   const initials = (companyName || profileName).split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
-  return (
-    <main className="min-h-screen bg-brand-bg text-white">
-      <header className="sticky top-0 z-40 border-b border-white/8 bg-brand-bg/92 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-5 sm:px-8">
-          <Link href="/client/dashboard" aria-label="DCampaign client portal"><Image src="/dcampaign-logo-white.webp" alt="DCampaign" width={167} height={32} priority className="h-7 w-auto" /></Link>
-          <div className="flex items-center gap-3">
-            <Link href="/client/notifications" aria-label={`${unreadNotifications} unread notifications`} className="relative grid size-11 place-items-center rounded-xl border border-white/10 text-lg text-white/65 transition hover:border-brand/40 hover:text-white">♢{unreadNotifications > 0 && <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-brand px-1 text-[10px] font-extrabold leading-5 text-white">{unreadNotifications > 99 ? '99+' : unreadNotifications}</span>}</Link>
-            <div className="hidden text-right sm:block"><p className="text-sm font-bold">{companyName}</p><p className="text-xs uppercase tracking-wider text-white/40">{packageName || 'Client workspace'}</p></div>
-            <div className="grid size-10 place-items-center rounded-full bg-brand font-display text-sm font-extrabold">{initials || 'DC'}</div>
-            <form action={logoutAction}><button className="hidden min-h-11 rounded-xl border border-white/10 px-4 text-sm font-bold text-white/60 transition hover:border-brand/40 hover:text-white sm:block">Sign out</button></form>
-          </div>
-        </div>
-        <details className="border-t border-white/8 lg:hidden"><summary className="cursor-pointer list-none px-5 py-3 text-sm font-bold text-brand-light">Open workspace menu</summary><div className="max-h-[70vh] overflow-y-auto border-t border-white/8 bg-[#101012] p-4"><Navigation services={services} pendingApprovals={pendingApprovals} /><form action={logoutAction}><button className="mt-4 min-h-11 w-full rounded-xl border border-white/10 px-4 text-sm font-bold text-white/70">Sign out</button></form></div></details>
-      </header>
-      <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[250px_minmax(0,1fr)]">
-        <aside className="sticky top-20 hidden h-[calc(100vh-5rem)] overflow-y-auto border-r border-white/8 px-5 py-8 lg:block"><p className="mb-5 px-3 text-xs font-extrabold uppercase tracking-[0.22em] text-white/35">Workspace</p><Navigation services={services} pendingApprovals={pendingApprovals} /><div className="mt-8 border-t border-white/8 pt-6"><Link href="/" className="px-3 text-xs font-bold uppercase tracking-wider text-white/40 hover:text-brand-light">Portal home</Link></div></aside>
-        <section className="min-w-0 px-5 py-8 sm:px-8 lg:px-10 lg:py-10">{children}</section>
-      </div>
-    </main>
-  );
+  const [activeHref, setActiveHref] = useState('/client/dashboard');
+  const panel = activeHref === '/client/dashboard' ? children : <WorkspacePanel href={activeHref} />;
+  return <main className="min-h-screen bg-[#09090a] text-white"><header className="sticky top-0 z-40 border-b border-white/8 bg-[#0d0d0f]/90 backdrop-blur-xl"><div className="mx-auto flex h-[76px] max-w-[1600px] items-center justify-between px-5 sm:px-8"><Link href="/client/dashboard" className="flex items-center gap-4"><Image src="/dcampaign-logo-white.webp" alt="DCampaign" width={167} height={32} priority className="h-7 w-auto" /><span className="hidden h-7 border-l border-white/15 pl-4 text-xs font-extrabold uppercase tracking-[0.22em] text-white/45 md:block">Client portal</span></Link><div className="flex items-center gap-3"><Link href="/client/notifications" className="relative grid size-10 place-items-center rounded-xl border border-white/10 text-white/55 transition hover:border-brand/40 hover:text-white"><Bell size={17} />{unreadNotifications > 0 && <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-brand px-1 text-[10px] font-extrabold leading-5 text-white">{unreadNotifications > 99 ? '99+' : unreadNotifications}</span>}</Link><div className="hidden text-right sm:block"><p className="text-sm font-bold">{companyName}</p><p className="text-[10px] uppercase tracking-widest text-white/35">{packageName || 'Client workspace'}</p></div><div className="grid size-10 place-items-center rounded-full bg-brand font-display text-sm font-extrabold">{initials || 'DC'}</div></div></div><details className="border-t border-white/8 lg:hidden"><summary className="cursor-pointer list-none px-5 py-3 text-sm font-bold text-brand-light">Open workspace menu</summary><div className="max-h-[70vh] overflow-y-auto border-t border-white/8 bg-[#101012] p-4"><Navigation services={services} pendingApprovals={pendingApprovals} activeHref={activeHref} onSelect={setActiveHref} /><div className="mt-5 border-t border-white/8 pt-4"><Link href="/client/settings" className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-white/50"><Settings size={17} />Settings</Link><form action={logoutAction}><button className="mt-2 flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-white/50"><LogOut size={17} />Logout</button></form></div></div></details></header><div className="mx-auto grid max-w-[1600px] lg:grid-cols-[260px_minmax(0,1fr)]"><aside className="sticky top-[76px] hidden h-[calc(100vh-4.75rem)] overflow-y-auto border-r border-white/8 px-5 py-8 lg:block"><div className="mb-7 rounded-2xl border border-brand/20 bg-brand/8 p-4"><p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-brand">Workspace</p><p className="mt-2 text-sm font-bold">{companyName}</p><p className="mt-1 text-xs text-white/40">Your growth command centre</p></div><Navigation services={services} pendingApprovals={pendingApprovals} activeHref={activeHref} onSelect={setActiveHref} /><div className="mt-8 border-t border-white/8 pt-5"><Link href="/client/settings" className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-white/45 hover:text-white"><Settings size={17} />Settings</Link><form action={logoutAction}><button className="mt-1 flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-white/45 hover:text-white"><LogOut size={17} />Logout</button></form></div></aside><section className="min-w-0 px-5 py-8 sm:px-8 lg:px-10 lg:py-10">{panel}</section></div></main>;
 }
