@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getEmailPortalAdmin } from '@/lib/email/admin-auth';
+import { processEmailQueue } from '@/lib/email/queue';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
 const campaignSchema = z.object({
@@ -9,6 +10,7 @@ const campaignSchema = z.object({
   recipients: z.array(z.string().email()).min(1).max(100),
   batchSize: z.number().int().min(1).max(25).default(25),
   intervalMinutes: z.number().int().min(30).max(1440).default(30),
+  sendNow: z.boolean().default(false),
 });
 
 export async function POST(request: Request) {
@@ -38,5 +40,13 @@ export async function POST(request: Request) {
     await admin.from('email_campaigns').delete().eq('id', campaign.id);
     return NextResponse.json({ error: 'Could not queue the campaign recipients.' }, { status: 500 });
   }
-  return NextResponse.json({ id: campaign.id, recipientCount: rows.length, status: 'scheduled' }, { status: 201 });
+  if (!data.sendNow) return NextResponse.json({ id: campaign.id, recipientCount: rows.length, status: 'scheduled' }, { status: 201 });
+
+  try {
+    const delivery = await processEmailQueue();
+    return NextResponse.json({ id: campaign.id, recipientCount: rows.length, status: delivery.sent ? 'sending' : 'scheduled', delivery }, { status: 201 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Campaign was queued, but the first batch could not be sent.';
+    return NextResponse.json({ id: campaign.id, recipientCount: rows.length, status: 'scheduled', warning: message }, { status: 201 });
+  }
 }
