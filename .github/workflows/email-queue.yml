@@ -1,0 +1,23 @@
+name: Process email queue
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  process-queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger the protected email queue
+        env:
+          CRON_SECRET: ${{ secrets.EMAIL_CRON_SECRET }}
+        run: |
+          test -n "$CRON_SECRET"
+          curl --fail-with-body --silent --show-error \
+            --header "Authorization: Bearer $CRON_SECRET" \
+            --url "https://portal.dcampaign.com/api/email/cron"
