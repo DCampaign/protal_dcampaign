@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-export function PortalHeader() {
+export function PortalHeader({ solid = false }: { solid?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export function PortalHeader() {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[60] border-b transition-all duration-300 ${scrolled ? 'border-white/10 bg-brand-bg/75 py-3 shadow-lg shadow-black/20 backdrop-blur-xl md:py-[6px] lg:py-4' : 'border-transparent bg-transparent py-5 backdrop-blur-0 md:py-[9px] lg:py-[22px]'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-[60] border-b transition-all duration-300 ${solid ? (scrolled ? 'border-white/10 bg-brand-bg py-3 shadow-lg shadow-black/20 md:py-[6px] lg:py-4' : 'border-white/8 bg-brand-bg py-5 md:py-[9px] lg:py-[22px]') : (scrolled ? 'border-white/10 bg-brand-bg/75 py-3 shadow-lg shadow-black/20 backdrop-blur-xl md:py-[6px] lg:py-4' : 'border-transparent bg-transparent py-5 backdrop-blur-0 md:py-[9px] lg:py-[22px]')}`}>
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 md:px-12">
         <div className="flex items-center gap-4">
           <Link href="/" aria-label="DCampaign Portal home" className="flex h-8.5 w-[7.65rem] items-center md:w-[9.35rem]">
@@ -29,4 +29,5 @@ export function PortalHeader() {
     </header>
   );
 }
+
 
