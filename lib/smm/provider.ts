@@ -8,7 +8,11 @@ function encryptionKey() {
   return key;
 }
 export function validateEndpoint(endpoint: string) {
-  return validatePublicEndpoint(endpoint, process.env.SMM_ALLOWED_API_HOSTS ?? '');
+  // Keep the bundled provider usable out of the box; additional providers
+  // should still be explicitly allow-listed through SMM_ALLOWED_API_HOSTS.
+  const configuredHosts = process.env.SMM_ALLOWED_API_HOSTS?.trim();
+  const allowedHosts = configuredHosts ? configuredHosts : 'cheapestsmmpanels.com';
+  return validatePublicEndpoint(endpoint, allowedHosts);
 }
 export function encryptKey(value: string) {
   const iv = randomBytes(12);
