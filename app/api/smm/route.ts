@@ -30,7 +30,16 @@ export async function GET() {
   } catch { return json({ error: 'SMM storage is unavailable. Check server configuration.' }, 503); }
 }
 export async function POST(request: Request) {
-  if (request.headers.get('origin') !== new URL(request.url).origin) return json({ error: 'Invalid request origin.' }, 403);
+  const origin = request.headers.get('origin');
+  if (origin) {
+    const requestUrl = new URL(request.url);
+    const forwardedHost = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
+    const forwardedProto = request.headers.get('x-forwarded-proto')?.split(',')[0]?.trim() ?? requestUrl.protocol.replace(':', '');
+    const forwardedOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : undefined;
+    const configuredOrigin = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '');
+    const allowedOrigins = new Set([requestUrl.origin, forwardedOrigin, configuredOrigin].filter(Boolean));
+    if (!allowedOrigins.has(origin)) return json({ error: 'Invalid request origin.' }, 403);
+  }
   if (!await getEmailPortalAdmin()) return json({ error: 'Administrator access required.' }, 401);
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return json({ error: 'Check the required fields and try again.' }, 400);
