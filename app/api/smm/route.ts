@@ -8,6 +8,7 @@ import { catalogSchema } from '@/lib/smm/validation';
 export const runtime = 'nodejs';
 const schema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('provider'), id: z.string().uuid().optional(), name: z.string().trim().min(2).max(80), endpoint: z.string().url().max(500), key: z.string().trim().min(1).max(2048) }),
+  z.object({ action: z.literal('delete-provider'), providerId: z.string().uuid() }),
   z.object({ action: z.literal('sync'), providerId: z.string().uuid() }),
   z.object({ action: z.literal('balance'), providerId: z.string().uuid() }),
   z.object({ action: z.literal('order'), id: z.string().uuid(), serviceId: z.string().uuid(), link: z.string().url().max(2000).refine(value => ['https:', 'http:'].includes(new URL(value).protocol)), quantity: z.number().int().positive(), confirmed: z.literal(true) }),
@@ -57,6 +58,13 @@ export async function POST(request: Request) {
       const result = input.id ? await db.from('smm_providers').update(values).eq('id', input.id) : await db.from('smm_providers').insert(values);
       if (result.error) throw new Error('Could not save provider. Check the SMM database migration.');
       return json({ message: 'Provider saved. Sync services to verify the connection.' });
+    }
+    if (input.action === 'delete-provider') {
+      const { data: linked } = await db.from('smm_services').select('id').eq('provider_id', input.providerId).limit(1);
+      if (linked?.length) throw new Error('Sync services must be removed before deleting this provider.');
+      const result = await db.from('smm_providers').delete().eq('id', input.providerId);
+      if (result.error) throw new Error('Could not delete provider.');
+      return json({ message: 'Provider deleted.' });
     }
     if (input.action === 'sync' || input.action === 'balance') {
       const { data: provider } = await db.from('smm_providers').select('*').eq('id', input.providerId).single();
