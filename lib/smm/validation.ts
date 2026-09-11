@@ -5,7 +5,7 @@ export const catalogSchema = z.array(z.object({
   name: z.string().min(1).max(1000), category: z.string().max(500),
   rate: z.coerce.number().finite().nonnegative(), min: z.coerce.number().int().positive(),
   max: z.coerce.number().int().positive(), type: z.string().max(80),
-}).refine(s => s.max >= s.min)).min(1).max(1000);
+}).refine(s => s.max >= s.min)).min(1).max(5000);
 
 export function validatePublicEndpoint(endpoint: string, allowedHosts: string) {
   const url = new URL(endpoint);

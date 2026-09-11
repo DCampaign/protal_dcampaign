@@ -22,7 +22,7 @@ export async function GET() {
     const db = createSupabaseAdminClient();
     const [providers, services, orders] = await Promise.all([
       db.from('smm_providers').select('id,name,endpoint').order('created_at'),
-      db.from('smm_services').select('*').order('name').limit(1000),
+      db.from('smm_services').select('*').order('name').limit(5000),
       db.from('smm_orders').select('*').order('created_at', { ascending: false }).limit(100),
     ]);
     if (providers.error || services.error || orders.error) return json({ error: 'SMM storage is not ready. Apply the SMM panel database migration.' }, 503);
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
         return json({ message: `${provider.name}: ${result.data.balance.toFixed(2)} ${result.data.currency} available.` });
       }
       const result = catalogSchema.safeParse(await providerRequest(provider, { action: 'services' }));
-      if (!result.success) throw new Error('Catalog incompatible, empty, or exceeds 1,000 services. This adapter supports the standard SMM API.');
+      if (!result.success) throw new Error('Catalog incompatible, empty, or exceeds 5,000 services. This adapter supports the standard SMM API.');
       const rows = result.data.map(s => ({ provider_id: provider.id, remote_id: s.service, name: s.name, category: s.category, rate: s.rate, min: s.min, max: s.max, type: s.type }));
       const { error } = await db.from('smm_services').upsert(rows, { onConflict: 'provider_id,remote_id' });
       if (error) throw new Error('Could not save services.');
