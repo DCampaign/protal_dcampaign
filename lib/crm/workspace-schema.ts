@@ -10,21 +10,29 @@ const prospect = z.object({
   priority:z.enum(['Hot','Warm','Cold']), assigned:text,
   status:z.enum(['New','Ready for Outreach','Contacted','Follow-up','Interested','Not Interested','No Response','Converted to Lead']),
   outreach:z.array(outreach).max(500), nextOutreach:text, nextTime:text, nextMethod:text, convertedLeadId:text.optional(),
+  createdDate:text.optional(), tags:z.array(text).max(50).optional(), followUpCompleted:z.boolean().optional(), followUpCompletedAt:text.optional(),
 });
 const lead = z.object({
   id, name:text, company:text, phone:text, email:text, service:text, source:text,
   status:z.enum(['New','Contacted','Interested','Meeting','Proposal Sent','Follow-up','Negotiation','Won','Lost']),
   priority:z.enum(['Hot','Warm','Cold']), followUp:text, time:text, assigned:text,
   value:z.number().finite().min(0).max(1_000_000_000), notes:text,
+  createdDate:text.optional(), conversionDate:text.optional(), convertedClientId:text.optional(), tags:z.array(text).max(50).optional(),
+  industry:text.optional(), whatsapp:text.optional(), website:text.optional(), city:text.optional(), state:text.optional(), address:text.optional(),
+  mapsUrl:text.optional(), instagramUrl:text.optional(), facebookUrl:text.optional(), linkedinUrl:text.optional(),
+  opportunities:z.array(text).max(100).optional(), potentialServices:z.array(text).max(100).optional(), outreach:z.array(outreach).max(500).optional(),
+  followUpCompleted:z.boolean().optional(), followUpCompletedAt:text.optional(),
 });
 const client = z.object({
   id, name:text, company:text, phone:text, services:text, start:text,
   value:z.number().finite().min(0).max(1_000_000_000), payment:z.enum(['Paid','Pending','Overdue']),
-  status:z.enum(['Active','Inactive','Completed']),
+  status:z.enum(['Active','Inactive','Completed','Ongoing','Discussion','Cancelled']),
+  createdDate:text.optional(), tags:z.array(text).max(50).optional(), email:text.optional(), whatsapp:text.optional(), website:text.optional(),
+  industry:text.optional(), city:text.optional(), state:text.optional(), address:text.optional(), mapsUrl:text.optional(), instagramUrl:text.optional(), facebookUrl:text.optional(), linkedinUrl:text.optional(), notes:text.optional(), source:text.optional(), opportunities:z.array(text).max(100).optional(),
 });
 const payment = z.object({
   id, client:text, service:text, amount:z.number().finite().min(0).max(1_000_000_000), due:text, paid:text,
-  status:z.enum(['Paid','Pending','Overdue']), method:text,
+  status:z.enum(['Paid','Pending','Overdue','Partially Paid','Cancelled']), method:text, paidAmount:z.number().finite().min(0).max(1_000_000_000).optional(), notes:text.optional(), createdDate:text.optional(), paymentDates:z.array(text).max(100).optional(), tags:z.array(text).max(50).optional(),
 });
 
 export const crmWorkspaceSchema = z.object({
