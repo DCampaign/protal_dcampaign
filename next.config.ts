@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
       ] },
       { source: '/client/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store, max-age=0' }] },
       { source: '/admin/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store, max-age=0' }] },
+      { source: '/crm/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store, max-age=0' }] },
     ];
   },
 };
