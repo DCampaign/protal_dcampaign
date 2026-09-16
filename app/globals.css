@@ -195,6 +195,14 @@ body:has(.crm-shell) > footer {
   min-width: 0;
   overflow: hidden;
 }
+/* Give Prospect actions a clear, balanced inset from the card edge. */
 .table-fixed td:last-child {
-  width: 140px;
+  width: 185px;
+  padding-right: 28px !important;
+}
+.table-fixed td:last-child > div {
+  gap: 0.5rem;
+  padding-right: 0.25rem;
+  margin-right: 3.5rem;
+  transform: translateX(-2rem);
 }
