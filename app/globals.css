@@ -172,3 +172,20 @@ select {
 }
 select:focus { border-color: #f16133 !important; outline: none; box-shadow: 0 0 0 3px rgb(241 97 51 / 0.14); }
 select option { background: #151518; color: #f4effd; }
+
+/* Preserve scrolling without showing browser-native bars inside the CRM shell. */
+.scrollbar-hidden,
+.scrollbar-hidden * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hidden::-webkit-scrollbar,
+.scrollbar-hidden *::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* CRM supplies its own sign-out-aware footer; hide the global duplicate. */
+body:has(.crm-shell) > footer {
+  display: none;
+}
