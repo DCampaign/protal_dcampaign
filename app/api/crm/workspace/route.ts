@@ -21,17 +21,17 @@ export async function GET() {
   if (!ctx) return NextResponse.json({error:'Unauthorized'},{status:401});
   const {data,error} = await ctx.admin.from('crm_workspace_state').select('payload,version,updated_at').eq('id','primary').maybeSingle();
   if (error) return NextResponse.json({error:'CRM database migration is required.'},{status:503});
-  return NextResponse.json({...((data ?? {payload:null,version:0,updated_at:null})),actor:ctx.profile.full_name||'CRM user'},{headers:{'Cache-Control':'private, no-store'}});
+  return NextResponse.json({...((data ?? {payload:null,version:0,updated_at:null})),actor:ctx.profile.full_name||'CRM user',role:ctx.profile.role},{headers:{'Cache-Control':'private, no-store'}});
 }
 
-type RecordLike={id:string;status?:string;name?:string;company?:string;businessName?:string;client?:string};
+type RecordLike={id:string;status?:string;name?:string;company?:string;businessName?:string;client?:string;title?:string};
 function addAudit(previous:Record<string,unknown>|null,next:Record<string,unknown>,actor:string){
   const priorHistory=Array.isArray(previous?.history)?previous.history:[];
   const entries:Record<string,string>[]=[];
-  for(const key of ['prospects','leads','clients','payments'] as const){
+  for(const key of ['prospects','leads','clients','payments','notifications'] as const){
     const before=new Map(((previous?.[key] as RecordLike[])||[]).map(item=>[item.id,item]));
-    for(const item of ((next[key] as RecordLike[])||[])){const old=before.get(item.id);const label=item.businessName||item.company||item.name||item.client||item.id;if(!old)entries.push({id:crypto.randomUUID(),actor,action:'Created',entity:key.slice(0,-1),entityId:item.id,details:`Created ${label}`,createdAt:new Date().toISOString()});else if(JSON.stringify(old)!==JSON.stringify(item)){const status=old.status!==item.status?` Status changed from ${old.status||'—'} to ${item.status||'—'}.`:'';entries.push({id:crypto.randomUUID(),actor,action:'Updated',entity:key.slice(0,-1),entityId:item.id,details:`Updated ${label}.${status}`,createdAt:new Date().toISOString()})}before.delete(item.id)}
-    for(const item of before.values()){const label=item.businessName||item.company||item.name||item.client||item.id;entries.push({id:crypto.randomUUID(),actor,action:'Deleted',entity:key.slice(0,-1),entityId:item.id,details:`Deleted ${label}`,createdAt:new Date().toISOString()})}
+    for(const item of ((next[key] as RecordLike[])||[])){const old=before.get(item.id);const label=item.businessName||item.company||item.name||item.client||item.title||item.id;if(!old)entries.push({id:crypto.randomUUID(),actor,action:'Created',entity:key.slice(0,-1),entityId:item.id,details:`Created ${label}`,createdAt:new Date().toISOString()});else if(JSON.stringify(old)!==JSON.stringify(item)){const status=old.status!==item.status?` Status changed from ${old.status||'—'} to ${item.status||'—'}.`:'';entries.push({id:crypto.randomUUID(),actor,action:'Updated',entity:key.slice(0,-1),entityId:item.id,details:`Updated ${label}.${status}`,createdAt:new Date().toISOString()})}before.delete(item.id)}
+    for(const item of before.values()){const label=item.businessName||item.company||item.name||item.client||item.title||item.id;entries.push({id:crypto.randomUUID(),actor,action:'Deleted',entity:key.slice(0,-1),entityId:item.id,details:`Deleted ${label}`,createdAt:new Date().toISOString()})}
   }
   return {...next,history:[...entries,...priorHistory].slice(0,50_000)};
 }

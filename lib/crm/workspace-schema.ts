@@ -11,7 +11,7 @@ const prospect = z.object({
   priority:z.enum(['Hot','Warm','Cold']), assigned:text,
   status:z.enum(['New','Ready for Outreach','Contacted','Follow-up','Interested','Not Interested','No Response','Converted to Lead']),
   outreach:z.array(outreach).max(500), nextOutreach:text, nextTime:text, nextMethod:text, followUpHistory:z.array(followUpRecord).max(1000).optional(), convertedLeadId:text.optional(),
-  createdDate:text.optional(), updatedAt:text.optional(), tags:z.array(text).max(50).optional(), followUpCompleted:z.boolean().optional(), followUpCompletedAt:text.optional(),
+  createdDate:text.optional(), updatedAt:text.optional(), tags:z.array(text).max(50).optional(), followUpCompleted:z.boolean().optional(), followUpCompletedAt:text.optional(), quotationStatus:z.enum(['Not Sent','Preparing','Sent']).optional(), quotationUrl:text.optional(),
 });
 const lead = z.object({
   id, name:text, company:text, phone:text, email:text, service:text, source:text,
@@ -22,14 +22,14 @@ const lead = z.object({
   industry:text.optional(), whatsapp:text.optional(), website:text.optional(), city:text.optional(), state:text.optional(), address:text.optional(),
   mapsUrl:text.optional(), instagramUrl:text.optional(), facebookUrl:text.optional(), linkedinUrl:text.optional(),
   opportunities:z.array(text).max(100).optional(), potentialServices:z.array(text).max(100).optional(), outreach:z.array(outreach).max(500).optional(), followUpHistory:z.array(followUpRecord).max(1000).optional(),
-  followUpCompleted:z.boolean().optional(), followUpCompletedAt:text.optional(),
+  followUpCompleted:z.boolean().optional(), followUpCompletedAt:text.optional(), quotationStatus:z.enum(['Not Sent','Preparing','Sent']).optional(), quotationUrl:text.optional(),
 });
 const client = z.object({
   id, name:text, company:text, phone:text, services:text, start:text,
   value:z.number().finite().min(0).max(1_000_000_000), payment:z.enum(['Paid','Pending','Overdue']),
   status:z.enum(['Active','Inactive','Completed','Ongoing','Discussion','Cancelled']),
   createdDate:text.optional(), updatedAt:text.optional(), archivedAt:text.optional(), sourceLeadId:text.optional(), tags:z.array(text).max(50).optional(), email:text.optional(), whatsapp:text.optional(), website:text.optional(),
-  industry:text.optional(), city:text.optional(), state:text.optional(), address:text.optional(), mapsUrl:text.optional(), instagramUrl:text.optional(), facebookUrl:text.optional(), linkedinUrl:text.optional(), notes:text.optional(), source:text.optional(), opportunities:z.array(text).max(100).optional(),
+  industry:text.optional(), city:text.optional(), state:text.optional(), address:text.optional(), mapsUrl:text.optional(), instagramUrl:text.optional(), facebookUrl:text.optional(), linkedinUrl:text.optional(), notes:text.optional(), source:text.optional(), opportunities:z.array(text).max(100).optional(), quotationStatus:z.enum(['Not Sent','Preparing','Sent']).optional(), quotationUrl:text.optional(),
 });
 const payment = z.object({
   id, client:text, service:text, amount:z.number().finite().min(0).max(1_000_000_000), due:text, paid:text,
@@ -38,9 +38,10 @@ const payment = z.object({
 const historyEntry = z.object({
   id, actor:text, action:text, entity:text, entityId:text.optional(), details:text, createdAt:text, updatedAt:text.optional(),
 });
+const notification = z.object({id, title:text, message:text, createdAt:text, createdBy:text, isActive:z.boolean().default(true)});
 
 export const crmWorkspaceSchema = z.object({
   leads:z.array(lead).max(10_000), prospects:z.array(prospect).max(10_000),
-  clients:z.array(client).max(10_000), payments:z.array(payment).max(25_000), history:z.array(historyEntry).max(50_000).default([]),
+  clients:z.array(client).max(10_000), payments:z.array(payment).max(25_000), history:z.array(historyEntry).max(50_000).default([]), notifications:z.array(notification).max(2_000).default([]),
 });
 export type CrmWorkspacePayload = z.infer<typeof crmWorkspaceSchema>;
