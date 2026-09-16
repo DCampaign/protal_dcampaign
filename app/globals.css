@@ -189,3 +189,12 @@ select option { background: #151518; color: #f4effd; }
 body:has(.crm-shell) > footer {
   display: none;
 }
+
+/* Keep dense CRM tables readable at narrow widths. */
+.table-fixed td {
+  min-width: 0;
+  overflow: hidden;
+}
+.table-fixed td:last-child {
+  width: 140px;
+}
