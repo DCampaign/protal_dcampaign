@@ -39,9 +39,17 @@ const historyEntry = z.object({
   id, actor:text, action:text, entity:text, entityId:text.optional(), details:text, createdAt:text, updatedAt:text.optional(),
 });
 const notification = z.object({id, title:text, message:text, createdAt:text, createdBy:text, isActive:z.boolean().default(true)});
+const webFormSubmission = z.object({
+  id, submissionId:text, submittedAtUtc:text, submittedAtIst:text, submissionType:text, formName:text, sourcePage:text,
+  fullName:text, email:text, phone:text, company:text, website:text, message:text, growthTarget:text, preferredDate:text, preferredTime:text,
+  positionApplied:text, department:text, experience:text, currentCompany:text, location:text, resumeLink:text, portfolioLink:text,
+  resumeFilename:text, resumeMimeType:text, resumeSizeBytes:text, ipAddress:text, userAgent:text, referrer:text, deliveryNotes:text,
+  quality:z.enum(['Good','Bad','Neutral']).default('Neutral'), createdAt:text, updatedAt:text,
+});
 
 export const crmWorkspaceSchema = z.object({
   leads:z.array(lead).max(10_000), prospects:z.array(prospect).max(10_000),
   clients:z.array(client).max(10_000), payments:z.array(payment).max(25_000), history:z.array(historyEntry).max(50_000).default([]), notifications:z.array(notification).max(2_000).default([]),
+  webForms:z.array(webFormSubmission).max(25_000).default([]),
 });
 export type CrmWorkspacePayload = z.infer<typeof crmWorkspaceSchema>;
