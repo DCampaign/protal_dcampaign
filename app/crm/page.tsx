@@ -7,5 +7,5 @@ export const metadata: Metadata = { title: 'CRM | DCampaign Digital' };
 
 export default async function CrmPage() {
   await requireCrmUser();
-  return <main className="min-h-screen bg-[#0b0b0c] text-white"><PortalHeader solid /><CrmWorkspace /></main>;
+  return <main className="min-h-screen bg-[#0b0b0c] text-white"><PortalHeader /><CrmWorkspace /></main>;
 }
