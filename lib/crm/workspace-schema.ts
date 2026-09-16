@@ -26,6 +26,7 @@ const lead = z.object({
 });
 const client = z.object({
   id, name:text, company:text, phone:text, services:text, start:text,
+  serviceItems:z.array(z.object({id,name:text,price:z.number().finite().min(0).max(1_000_000_000),billingType:z.enum(['One-time','Monthly subscription']).default('One-time'),status:z.enum(['Pending','Ongoing','Completed','Cancelled'])})).max(100).optional(),
   value:z.number().finite().min(0).max(1_000_000_000), payment:z.enum(['Paid','Pending','Overdue']),
   status:z.enum(['Active','Inactive','Completed','Ongoing','Discussion','Cancelled']),
   createdDate:text.optional(), updatedAt:text.optional(), archivedAt:text.optional(), sourceLeadId:text.optional(), tags:z.array(text).max(50).optional(), email:text.optional(), whatsapp:text.optional(), website:text.optional(),
