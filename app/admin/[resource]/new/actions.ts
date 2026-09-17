@@ -11,7 +11,7 @@ export async function createResourceAction(formData: FormData) {
   const supabase = await createSupabaseServerClient();
   if (!supabase) throw new Error('Supabase is not configured');
   const value = (name: string) => String(formData.get(name) ?? '').trim();
-  let table = resource === 'support' ? 'support_tickets' : resource;
+  const table = resource === 'support' ? 'support_tickets' : resource;
   let payload: Record<string, unknown>;
   if (resource === 'services') payload = { name: value('name'), slug: value('slug'), description: value('description') || null };
   else if (resource === 'projects') payload = { title: value('title'), client_id: value('client_id'), status: value('status') || 'planned', description: value('description') || null };

@@ -7,7 +7,8 @@ export async function getCurrentClientContext() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { supabase, user: null, profile: null, client: null, clientId: null, services: [] };
   const { data: profile } = await supabase.from('profiles').select('id,full_name,email,phone,avatar_url,role,is_active').eq('user_id', user.id).maybeSingle();
-  if (!profile) return { supabase, user, profile: null, client: null, clientId: null, services: [] };
+  if (!profile?.is_active) redirect('/client-portal/login');
+  if (profile.role !== 'client') redirect('/crm');
   const { data: membership } = await supabase.from('client_members').select('client_id,client_role,is_primary,clients(id,company_name,logo_url,status,package_name,account_manager_id)').eq('profile_id', profile.id).order('is_primary', { ascending: false }).limit(1).maybeSingle();
   const clientRelation = membership?.clients;
   const client = Array.isArray(clientRelation) ? clientRelation[0] ?? null : clientRelation ?? null;

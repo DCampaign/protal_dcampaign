@@ -25,6 +25,7 @@ const lead = z.object({
   followUpCompleted:z.boolean().optional(), followUpCompletedAt:text.optional(), quotationStatus:z.enum(['Not Sent','Preparing','Sent']).optional(), quotationUrl:text.optional(),
 });
 const client = z.object({
+  portalContact:z.object({name:text,email:text,phone:text,website:text,address:text}).optional(),
   id, name:text, company:text, phone:text, services:text, start:text,
   serviceItems:z.array(z.object({id,name:text,price:z.number().finite().min(0).max(1_000_000_000),billingType:z.enum(['One-time','Monthly subscription']).default('One-time'),status:z.enum(['Pending','Ongoing','Completed','Cancelled'])})).max(100).optional(),
   value:z.number().finite().min(0).max(1_000_000_000), payment:z.enum(['Paid','Pending','Overdue']),

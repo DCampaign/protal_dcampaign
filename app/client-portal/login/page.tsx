@@ -1,0 +1,5 @@
+import { PortalHeader } from '@/components/portal-header';
+import { LoginForm } from '@/app/client/login/login-form';
+export default function PortalLogin() {
+ return <main className="min-h-screen bg-brand-bg text-white"><PortalHeader solid/><section className="mx-auto grid max-w-7xl gap-10 px-6 pb-20 pt-36 md:px-12 lg:grid-cols-2 lg:items-center"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-brand">DCampaign Client Portal</p><h1 className="mt-5 font-display text-4xl font-bold leading-tight md:text-6xl">Your work.<br/>Clear progress.<br/><span className="text-brand">One shared space.</span></h1><p className="mt-6 max-w-md leading-7 text-zinc-400">Follow your services, review deliverables, share feedback and stay connected with your DCampaign team.</p><p className="mt-5 text-sm text-zinc-500">Access is by invitation from your account manager.</p></div><div className="rounded-3xl border border-white/10 bg-[#151518] p-6 sm:p-9"><h2 className="mb-2 font-display text-2xl font-bold">Welcome back</h2><p className="mb-7 text-sm text-zinc-400">Sign in to your private client workspace.</p><LoginForm/></div></section></main>;
+}
