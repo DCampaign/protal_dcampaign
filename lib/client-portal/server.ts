@@ -49,9 +49,12 @@ export async function portalData(requested?:string|null):Promise<PortalData> {
   const base:PortalData={employee,canManage:employee && (isAdminRole(profile.role)||['account_manager','team_member'].includes(profile.role)),canInvite:isAdminRole(profile.role),name:profile.full_name,account,accounts:ctx.accounts,records:[],events:[],members:[],managers:[],clients:[],profile:{name:'',email:'',phone:'',website:'',address:''},services:[],payments:[],manager:null,lastRead:ctx.lastRead};
   if (isAdminRole(profile.role)) {
     base.clients=ctx.clients.map(c=>({id:c.id,company:c.company}));
-    const {data,error}=await admin.from('profiles').select('id,full_name').eq('is_active',true).in('role',['super_admin','admin','account_manager','team_member']);
+    // Avoid a PostgREST enum-array filter here. Some projects expose `role` as a
+    // database enum, for which the generated `in` filter may fail at runtime.
+    // Fetch the active non-client team once and narrow it with the app's roles.
+    const {data,error}=await admin.from('profiles').select('id,full_name,role').eq('is_active',true).neq('role','client');
     if(error)throw new PortalError('Unable to load account managers.',503);
-    base.managers=(data||[]).map(p=>({id:p.id,name:p.full_name}));
+    base.managers=(data||[]).filter(p=>['super_admin','admin','account_manager','team_member'].includes(p.role)).map(p=>({id:p.id,name:p.full_name}));
   }
   if (!account) return base;
   let recordsQuery=admin.from('portal_records').select('*').eq('account_id',account.id).order('updated_at',{ascending:false});
