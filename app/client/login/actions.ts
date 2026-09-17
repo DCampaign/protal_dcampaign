@@ -10,6 +10,7 @@ export type LoginState = { error?: string };
 
 export async function loginAction(_: LoginState, formData: FormData): Promise<LoginState> {
   const mode = formData.get('loginMode') === 'employee' ? 'employee' : 'client';
+  const clientPortalDestination = formData.get('destination') === 'client-portal';
   const parsed = loginSchema.safeParse({ email: formData.get('email'), password: formData.get('password') });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Check your details and try again.' };
   const supabase = await createSupabaseServerClient();
@@ -20,7 +21,7 @@ export async function loginAction(_: LoginState, formData: FormData): Promise<Lo
   const { data: profile } = await supabase.from('profiles').select('role,is_active').eq('user_id', user?.id ?? '').maybeSingle();
   if (!profile?.is_active) { await supabase.auth.signOut(); return { error: 'This account is not active. Contact DCampaign support.' }; }
   if (mode === 'employee' && !isCrmRole(profile.role)) { await supabase.auth.signOut(); return { error: 'Employee access is restricted to authorized team accounts.' }; }
-  if (isCrmRole(profile.role)) redirect('/crm');
+  if (isCrmRole(profile.role) && !clientPortalDestination) redirect('/crm');
   try { await portalContext(); } catch { await supabase.auth.signOut(); return {error:'Your client portal access is disabled or not yet linked. Please contact your account manager.'}; }
   redirect('/client-portal');
 }

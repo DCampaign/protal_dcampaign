@@ -5,7 +5,7 @@ import { loginAction, type LoginState } from './actions';
 
 const initialState: LoginState = {};
 
-export function LoginForm() {
+export function LoginForm({ destination }: { destination?: 'client-portal' }) {
   const [state, action, pending] = useActionState(loginAction, initialState);
   const [mode, setMode] = useState<'client' | 'employee'>('client');
   useEffect(() => {
@@ -18,7 +18,7 @@ export function LoginForm() {
     document.addEventListener('click', onClick);
     return () => document.removeEventListener('click', onClick);
   }, []);
-  return <form className="space-y-5" action={action}><input type="hidden" name="loginMode" value={mode} readOnly />
+  return <form className="space-y-5" action={action}><input type="hidden" name="loginMode" value={mode} readOnly />{destination&&<input type="hidden" name="destination" value={destination} readOnly />}
     <div><label htmlFor="email" className="mb-2 block text-sm font-bold text-white/70">Work email</label><input id="email" name="email" type="email" autoComplete="email" required className="h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-base text-white outline-none transition placeholder:text-white/25 focus:border-brand/70 focus:ring-2 focus:ring-brand/20" placeholder="you@company.com" /></div>
     <div><div className="mb-2 flex items-center justify-between"><label htmlFor="password" className="text-sm font-bold text-white/70">Password</label><a href="/client/forgot-password" className="text-sm font-bold text-brand-light hover:text-white">Forgot password?</a></div><input id="password" name="password" type="password" autoComplete="current-password" required minLength={8} className="h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-base text-white outline-none transition placeholder:text-white/25 focus:border-brand/70 focus:ring-2 focus:ring-brand/20" placeholder="Enter your password" /></div>
     {state.error && <p role="alert" className="rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200">{state.error}</p>}
