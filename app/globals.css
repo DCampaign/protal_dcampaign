@@ -189,6 +189,9 @@ select option { background: #151518; color: #f4effd; }
 body:has(.crm-shell) > footer {
   display: none;
 }
+body:has(.client-portal-shell) > footer {
+  display: none;
+}
 
 /* Keep dense CRM tables readable at narrow widths. */
 .table-fixed td {
