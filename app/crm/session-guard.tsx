@@ -27,11 +27,9 @@ export function CrmSessionGuard() {
       const now = Date.now();
       if (now - lastActivity >= IDLE_LIMIT_MS || now - started >= SESSION_LIMIT_MS) logout();
     }, 60_000);
-    window.addEventListener('pagehide', logout);
     return () => {
       window.clearInterval(timer);
       events.forEach(event => window.removeEventListener(event, activity));
-      window.removeEventListener('pagehide', logout);
     };
   }, []);
 
