@@ -192,6 +192,155 @@ body:has(.crm-shell) > footer {
 body:has(.client-portal-shell) > footer {
   display: none;
 }
+.client-portal-shell > footer {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 30;
+}
+.client-portal-shell > div {
+  min-height: 0;
+}
+.client-portal-shell aside,
+.client-portal-shell aside > div,
+.client-portal-shell section {
+  min-height: 0;
+}
+.client-portal-shell aside > div {
+  overflow: hidden;
+}
+.client-portal-profile > form,
+.client-portal-profile > div > div {
+  padding: 1rem;
+}
+.client-portal-profile input,
+.client-portal-profile textarea,
+.client-portal-profile button {
+  min-height: 2.5rem;
+}
+.client-portal-profile input,
+.client-portal-profile textarea {
+  padding: 0.45rem 0.7rem;
+}
+.client-portal-password {
+  grid-column: 1 / -1;
+}
+.client-portal-nav button {
+  min-height: 2.25rem;
+  gap: 0.45rem;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.client-portal-nav button svg {
+  width: 15px;
+  height: 15px;
+}
+.client-portal-nav {
+  width: 100%;
+  justify-content: space-between;
+  scrollbar-width: none;
+}
+.client-portal-nav::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .client-portal-shell [class~="gap-4"][class~="xl:grid-cols-2"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+  .client-portal-shell article[class~="p-5"] {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .client-portal-shell aside nav {
+    gap: 0.25rem;
+    overflow: visible;
+  }
+  .client-portal-shell aside nav button {
+    min-height: 2rem;
+    gap: 0.5rem;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+  .client-portal-shell aside nav button svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* Client Portal tablet and phone layout: keep navigation usable without shrinking desktop cards. */
+@media (max-width: 1023px) {
+  .client-portal-shell {
+    min-height: 100dvh;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .client-portal-shell > div {
+    overflow: visible !important;
+    padding-bottom: 2rem;
+  }
+  .client-portal-shell aside > div {
+    border-radius: 1rem;
+    padding: 0.75rem;
+  }
+  .client-portal-shell aside nav {
+    flex-wrap: wrap;
+    overflow: visible;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .client-portal-shell aside nav::-webkit-scrollbar {
+    display: none;
+  }
+  .client-portal-shell aside nav button {
+    min-height: 2.5rem;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  .client-portal-shell section {
+    min-width: 0;
+    overflow: visible !important;
+  }
+  .client-portal-shell section > header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .client-portal-shell section > header h1 {
+    font-size: clamp(1.65rem, 6vw, 2.25rem);
+    line-height: 1.1;
+  }
+  .client-portal-shell article {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .client-portal-shell > div {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-bottom: 3rem;
+  }
+  .client-portal-shell aside nav {
+    margin-inline: -0.25rem;
+    padding-inline: 0.25rem;
+  }
+  .client-portal-shell aside nav button {
+    min-height: 2.25rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.75rem;
+  }
+  .client-portal-shell .grid.grid-cols-2 {
+    gap: 0.5rem;
+  }
+  .client-portal-shell .grid.grid-cols-2 > * {
+    min-width: 0;
+  }
+}
 
 /* Keep dense CRM tables readable at narrow widths. */
 .table-fixed td {
