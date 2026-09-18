@@ -24,7 +24,7 @@ const blank=():WebFormSubmission=>{const stamp=new Date().toISOString();return O
 const input='h-10 w-full rounded-xl border border-white/10 bg-[#101012] px-3 py-2 text-sm text-white outline-none focus:border-[#f16133]';
 const format=(value:string)=>value?new Date(value).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}):'—';
 
-export function WebFormsSection({records,setRecords}:{records:WebFormSubmission[];setRecords:React.Dispatch<React.SetStateAction<WebFormSubmission[]>>}){
+export function WebFormsSection({records,setRecords,onImportStaged}:{records:WebFormSubmission[];setRecords:React.Dispatch<React.SetStateAction<WebFormSubmission[]>>;onImportStaged:(count:number)=>void}){
  const [query,setQuery]=useState(''),[limit,setLimit]=useState(10),[editing,setEditing]=useState<WebFormSubmission|null|undefined>();
  const rows=useMemo(()=>records.filter(item=>columns.some(([key])=>item[key].toLowerCase().includes(query.toLowerCase()))).slice(0,limit),[records,query,limit]);
  const save=(record:WebFormSubmission)=>{const next={...record,submissionId:record.submissionId||record.id,createdAt:record.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};setRecords(value=>editing?value.map(item=>item.id===next.id?next:item):[next,...value]);setEditing(undefined)};
@@ -33,7 +33,7 @@ export function WebFormsSection({records,setRecords}:{records:WebFormSubmission[
  return <div className="grid gap-4">
   <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
    <label className="col-span-2 flex h-10 min-w-52 flex-1 items-center gap-2 rounded-xl border border-white/10 bg-[#151517] px-3"><Search size={16} className="text-zinc-500"/><input value={query} onChange={event=>setQuery(event.target.value)} placeholder="Search web form submissions" className="min-w-0 w-full bg-transparent text-sm outline-none"/></label>
-   <Export records={records}/><Import onImport={incoming=>setRecords(current=>merge(current,incoming))}/>
+   <Export records={records}/><Import onImport={incoming=>{setRecords(current=>merge(current,incoming));onImportStaged(incoming.length)}}/>
    <label className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#151517] px-3 text-[10px] font-bold text-zinc-400">Show<select value={limit} onChange={event=>setLimit(Number(event.target.value))} className="bg-transparent text-white outline-none">{[10,25,50].map(size=><option key={size} className="bg-[#151517]">{size}</option>)}</select></label>
    <button onClick={()=>setEditing(null)} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#f16133] px-4 text-xs font-bold"><Plus size={15}/> Add submission</button>
   </div>
