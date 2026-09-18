@@ -39,7 +39,6 @@ function addAudit(previous:Record<string,unknown>|null,next:Record<string,unknow
 export async function PUT(request:Request) {
   const ctx = await getContext();
   if (!ctx) return NextResponse.json({error:'Unauthorized'},{status:401});
-  if (!['super_admin','admin'].includes(ctx.profile.role)) return NextResponse.json({error:'Only CRM administrators can update records.'},{status:403});
   const body = await request.json().catch(()=>null);
   const parsed = crmWorkspaceSchema.safeParse(body?.payload);
   const version = Number(body?.version);
